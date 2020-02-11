@@ -1,6 +1,5 @@
 sportif
 ski
-amateur
 surf
 aviron
 cricket
@@ -18,8 +17,6 @@ basket-ball
 jeu
 hockey
 kayak
-professionnel
-federation
 stade
 trampoline
 softball
@@ -30,9 +27,7 @@ natation
 saut
 roller
 petanque
-automobile
 entrainement
-epreuve
 judo
 karate
 motonautisme
@@ -42,7 +37,6 @@ athlete
 alpinisme
 athletisme
 equipement
-discipline
 piste
 joueur
 hurling
@@ -62,12 +56,9 @@ martial
 musculation
 marathon
 vitesse
-touche
 tournoi
 skateboard
 tennis de table
-marqueur
-physique
 nautisme
 omnisport
 snowboard
@@ -83,22 +74,17 @@ boxe
 crosse
 competition
 coubertin
-draft
-pratiquant
 raquette
-hiver
 hippisme
 karting
 motocross
-renault
-roulette
 piscine
+natation
 equitation
 game
 gymnaste
 canoe
 kayak
-cio
 club
 biathlon
 sportive
@@ -115,7 +101,6 @@ crampon
 gymnase
 frisbee
 forme
-ferrari
 dojo
 planche a roulettes
 paddock
@@ -135,30 +120,20 @@ jeunesse
 regle
 patin
 patinoire
-Peugeot
-envoi
 dressage
 education
-categorie
 terrain
 spot
 combine
 courbature
-courrier
 bodyboard
-dispute
-demonstration
-direct
 eurosport
-formule
+formule 1
 gazon
 nba
 pelouse
 ringuette
-societe
 junior
 hippodrome
-handicap
-licencie
 maillot
 nageur

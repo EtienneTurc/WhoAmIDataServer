@@ -1,1 +1,64 @@
-budget,financier,économie,ministère,banque,impôt,surintendant,dépense,emprunt,trésorerie,intendant,recette,financement,administration,contrôleur,déficit,gestion,budgétaire,affaire,argentier,contribuable,ministre,financière,financièrement,questeur,trésorier,service,management,entreprise,faillite,imposition,contrôle,corruption,argent,banqueroute,comptable,monétaire,fiscal,ressource,receveur,taxe,vote,projet,Necker,Calonne,charge,Colbert,comptabilité,portefeuille,échiquier,fiscalité,Fouquet,généralité,requin,spéculation,crise financière,définanciariser,délit d'initié,fisc,fonds,trésor,caisse,bourse,capital,contribution,commerce
+budget
+financier
+économie
+banque
+impôt
+dépense
+emprunt
+trésorerie
+financement
+déficit
+gestion
+budgétaire
+argentier
+contribuable
+financière
+financièrement
+trésorier
+faillite
+imposition
+argent
+banqueroute
+comptable
+monétaire
+fiscal
+ressource
+taxe
+charge
+comptabilité
+portefeuille
+fiscalité
+spéculation
+fisc
+trésor
+bourse
+capital
+contribution
+Lydia
+Societe generale
+bnp
+lcl
+crédit lyonnais
+credit mutuel
+credit agricole
+hsbc
+smc
+marseillaise de crédit
+credit du nord
+facture
+visa
+mastercard
+american express
+caisse d'épargne
+banque postale
+banque populaire
+cic
+b for bank
+boursorama
+hello bank
+ing
+monabanque
+revolut
+n26
+rib
+iban

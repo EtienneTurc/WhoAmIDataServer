@@ -1,31 +1,13 @@
-jeu vidéo
 Monopoly
 jeu de rôle
-jouer
 jeu de table
 jeu de combinaison
 jeu de plateau
 jeu de règle
 ludiques
 jeux de rôles
-soirée
-après-midi
-geek
-imprimer
-banque
 Scrabble
 domino
-académie
-règle
-enjeu
-action
-égalité
-éditeur
-vente
-masse
-distribution
-dette
-gens
-entrée
-ensemble
-assemblage
+cluedo
+jungle speed
+trivial pursuit
