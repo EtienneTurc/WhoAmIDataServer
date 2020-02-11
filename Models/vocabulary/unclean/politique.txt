@@ -33,8 +33,6 @@ Goulag
 gauche
 gazette
 fascisme
-journal
-mission
 scission
 populisme
 pouvoir
@@ -68,11 +66,9 @@ anticléricalisme
 dépolitiser
 diplomatie
 contre-révolution
-club
 citoyen
 communiste
 coalition
-Dada
 économique
 dialogue
 aliénation
@@ -89,15 +85,12 @@ gaullisme
 Gestapo
 immigration
 impérialisme
-Jules César
 keynésianisme
 islamisme
 isolationnisme
-Sherpa
 spartakisme
 sécession
 tribun
-Thucydide
 totalitarisme
 Union européenne
 pogrom
@@ -113,7 +106,6 @@ Pékin
 panafricanisme
 perestroïka
 orthodoxe
-revue
 relance
 philosophe
 polémique
@@ -133,119 +125,68 @@ dissidence
 dérive
 démographique
 débat
-courant
 crise
 colloque
-confusion
 clan
 austérité
 centrisme
-capétien
-bulgare
 bien-pensance
 Al-Qaida
-ambiant
-analyste
 abstentionniste
 gauchiste
 extrémiste
 fanatique
 groupuscule
 indépendance
-institut
 méritocratie
 indépendantiste
 leader
 junte
 majorité
 souverainiste
-statut
 système
-tempête
 utopie
-vert
-vingtaine
-vivre
+les verts
 troïka
-transition
 tribalisme
 terreur
 politicard
-recrue
-qualité
-réaction
-homme
 pamphlet
 opportunisme
 pétition
 nihilisme
-province
-scandale
 parlementaire
 politologue
-pression
-porte
 tripartite
-trouble
-tendance
 Tchéka
-serbe
-issu
 militant
 marxiste
 meeting
-intégration
-Guépéou
 gouvernant
 écologiste
-extérieur
-féminisme
-autruche
-banqueroute
 apolitique
-arène
-agrarien
-agitation
-bureau
 colonial
 décentralisation
 déflation
 démocrate
-désordre
 diplomate
-interpellation
-interpeller
 interventionnisme
 indépendantisme
 mélanchoniste
-matrie
-Maxime
-machiavélique
-machiavélisme
-mariniste
 militer
-minarchisme
-mitchourinien
 mitterrandisme
 mobutisme
 mobutiste
-modéré
-indifférent
-libéralement
 malthusianisme
 mandature
 manifestivité
 libertarianisme
-libre pensée
-Livre Blanc
 lumumbisme
 lutte des classes
 maccarthysme
 nihiliste
 non-inscrit
 mussolinite
-nouveauté
-novateur
 ochlocratie
 moscoutaire
 néerlandisme
@@ -259,20 +200,60 @@ panhispanisme
 panislamisme
 opiniocratie
 ouvriérisme
-
 diplomatie
-doigté
 gouvernement
 diplomate
-tactique
-habileté
-jeu
-stratégie
-adresse
-adroit
-avisé
-système
-machiavélique
 négociation
-ruse
-astuce
+en marche
+les républicains
+parti socialiste
+ps
+fn
+rn
+front national
+rassemblement national
+municipales
+présidentielles
+lfi
+fi
+france insoumise
+parti radical
+parti communiste
+pcf
+fête de l'huma
+macron
+sarkozy
+hollande
+melenchon
+le pen
+wauquiez
+baroin
+dati
+hidalgo
+griveaux
+edouard philippe
+schiappa
+eelv
+europe ecologie
+les verts
+modem
+udi
+lutte ouvrière
+force ouvrière
+cgt
+compagnie générale du travail
+retraite
+réforme
+cfdt
+medef
+extinction rebellion
+xr
+frexit
+brexit
+trump
+campagne
+élections
+lrem
+ppe
+droite
+gauche
