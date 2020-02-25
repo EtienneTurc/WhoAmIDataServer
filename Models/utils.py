@@ -19,20 +19,20 @@ def tag_mail(header):
 				 'apple', 'google','uber','ubereats','doctolib', 'instagram', 'amazon']
 
 	if header == []:
-		return 'no_cat'
+		return None
 	for k in header:
 		if k['name'] == 'From':
 			L_cat = [el * (el in k['value']) for el in comp_list]
 			L_cat = list(filter(lambda x: x!='', L_cat))
 			if L_cat == []:
-				return('no_cat')
+				return None
 			elif len(L_cat) > 2:
 				print(L_cat)
 				return L[cat[0]]
 			elif len(L_cat) == 1:
 				return L_cat[0]
 			else:
-				return 'no_cat'
+				return None
 
 
 def format_mail(text):
