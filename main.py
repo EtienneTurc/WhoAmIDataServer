@@ -6,7 +6,7 @@ app = Flask(__name__)
 CORS(app)
 
 @cross_origin
-@app.route('/analytics')
+@app.route('/analytics', methods=['POST'])
 def simulate_long_request():
-    time.sleep(10)
-    return {"result":"this is the result of a long request"}
+    print(request.json)
+    return {"result":"non merci, bisous"}
