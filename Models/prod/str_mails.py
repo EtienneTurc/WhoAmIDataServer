@@ -3,9 +3,9 @@ import pandas as pd
 
 
 ### For debugging ###
-# from utils import tag_mail
-# df = pd.read_json(r'../data/gmail_boetto_basic.txt', encoding = 'utf-8')
-# df['cat'] = df.headers.apply(tag_mail)
+from utils import tag_mail
+df = pd.read_json(r'../data/gmail_boetto_basic.txt', encoding = 'utf-8')
+df['cat'] = df.headers.apply(tag_mail)
 
 
 def lydia(df):
@@ -69,3 +69,5 @@ def doctolib(df):
 	return {'date' : list(mails_doc['cons_date'].values),
 			'appointment' : list(mails_doc['appointment'].values)
 		   }
+
+print(doctolib(df))
