@@ -2,6 +2,12 @@ import re
 import pandas as pd
 
 
+### For debugging ###
+# from utils import tag_mail
+# df = pd.read_json(r'../data/gmail_boetto_basic.txt', encoding = 'utf-8')
+# df['cat'] = df.headers.apply(tag_mail)
+
+
 def lydia(df):
 	def find_price(x):
 	    res1 = re.findall(r"VOUS A RÉGLÉ \d+,\d+ €", x)
@@ -24,3 +30,42 @@ def lydia(df):
 			'transaction' : list(mails_lydia['transaction'].values)
 		   }
 
+
+from datetime import datetime
+import locale
+locale.setlocale(locale.LC_TIME, "fr_FR")
+
+def doctolib(df):
+
+	#function to apply to retrieve date
+	def get_date(x):
+	    tmp = x['snippet']
+	    tmp = tmp.split(x['appointment'])[1]
+	    tmp = tmp.split(' DÉPLACER')[0]
+	    try:
+	        date = datetime.strptime(tmp, '%A %d %B à %Hh%M')
+	        date = date.replace(year = x['date'].year)
+	    except:
+	        date = None
+	    return date
+
+    #restriction to doctolib mails
+	mails_doc = df.loc[df.cat == 'doctolib']
+	#restriction to confirmed appointments 
+	mails_doc = mails_doc.loc[mails_doc.snippet.str.contains("confirmé")]
+
+	# Regex to match weekdays
+	reg_weekdays = re.compile(r' Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche')
+
+	# Extracting name of doctor + sector by splitting on confirmé and weekdays regex
+	mails_doc['appointment'] = mails_doc.snippet.apply(lambda x: reg_weekdays.split(x.split('confirmé ')[1])[0] )
+
+	# Retriving appointment date, the year is the one of the email notification
+	mails_doc['cons_date'] = mails_doc[['snippet', 'date', 'appointment']].apply(get_date, axis = 1) 
+
+	#we discard wrong matchings
+	mails_doc = mails_doc.loc[mails_doc['cons_date'].isna() == False]
+
+	return {'date' : list(mails_doc['cons_date'].values),
+			'appointment' : list(mails_doc['appointment'].values)
+		   }
