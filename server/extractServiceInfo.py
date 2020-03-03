@@ -31,7 +31,6 @@ import locale
 locale.setlocale(locale.LC_TIME, "fr_FR.utf8") # if error here set it to fr_FR or check locale -a
 
 def doctolib(df):
-
     #function to apply to retrieve date
     def get_date(x):
         tmp = x['snippet']
@@ -48,6 +47,11 @@ def doctolib(df):
     mails_doc = df.loc[df.cat == 'doctolib']
     #restriction to confirmed appointments
     mails_doc = mails_doc.loc[mails_doc.snippet.str.contains("confirmé")]
+
+    if mails_doc.shape[0] == 0:
+		return {'date' : [],
+	            'appointment' : []
+	           }
 
     # Regex to match weekdays
     reg_weekdays = re.compile(r' Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche')
