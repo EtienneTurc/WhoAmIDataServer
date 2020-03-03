@@ -49,9 +49,9 @@ def doctolib(df):
     mails_doc = mails_doc.loc[mails_doc.snippet.str.contains("confirmé")]
 
     if mails_doc.shape[0] == 0:
-		return {'date' : [],
-	            'appointment' : []
-	           }
+        return {'date' : [],
+                'appointment' : []
+               }
 
     # Regex to match weekdays
     reg_weekdays = re.compile(r' Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche')
