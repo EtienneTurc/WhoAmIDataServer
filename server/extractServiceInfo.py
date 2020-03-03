@@ -19,6 +19,12 @@ def lydia(df):
             return None
 
     mails_lydia = df.loc[df.cat=='lydia'][['date', 'body']]
+    
+    if mails_lydia.shape[0] == 0:
+        return {'date' : [],
+                'transaction' : []
+               }
+
     mails_lydia['transaction'] = mails_lydia.body.apply(find_price)
     mails_lydia = mails_lydia.loc[mails_lydia.transaction.isna()==False]
 
