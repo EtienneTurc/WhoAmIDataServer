@@ -34,7 +34,11 @@ def lydia(df):
 
 from datetime import datetime
 import locale
-locale.setlocale(locale.LC_TIME, "fr_FR.utf8") # if error here set it to fr_FR or check locale -a
+try : 
+    locale.setlocale(locale.LC_TIME, "fr_FR.utf8") # if error here set it to fr_FR or check locale -a
+except :
+    locale.setlocale(locale.LC_TIME, "fr_FR") # if error here set it to fr_FR or check locale -a
+
 
 def doctolib(df):
     #function to apply to retrieve date
