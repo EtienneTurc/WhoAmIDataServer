@@ -18,4 +18,4 @@ def mailAnalytics():
     df['cat'] = df.headers.apply(tag_mail)
     res = extractServiceInfo(df)
 
-    return res #{"result":"non merci, bisous"}
+    return res
