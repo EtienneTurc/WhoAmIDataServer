@@ -115,6 +115,7 @@ def amazon(df):
 	    #parsing products
 	    products = re.findall(r'\(Vendu par (.*?) \n \n', el, re.DOTALL)
 	    
+        #if no product pass
 	    if products==[]:
 	        continue
 	    
