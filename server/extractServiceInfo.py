@@ -19,6 +19,12 @@ def lydia(df):
             return None
 
     mails_lydia = df.loc[df.cat=='lydia'][['date', 'body']]
+    
+    if mails_lydia.shape[0] == 0:
+        return {'date' : [],
+                'transaction' : []
+               }
+
     mails_lydia['transaction'] = mails_lydia.body.apply(find_price)
     mails_lydia = mails_lydia.loc[mails_lydia.transaction.isna()==False]
 
@@ -28,7 +34,11 @@ def lydia(df):
 
 from datetime import datetime
 import locale
-locale.setlocale(locale.LC_TIME, "fr_FR.utf8") # if error here set it to fr_FR or check locale -a
+try : 
+    locale.setlocale(locale.LC_TIME, "fr_FR.utf8") # if error here set it to fr_FR or check locale -a
+except :
+    locale.setlocale(locale.LC_TIME, "fr_FR") # if error here set it to fr_FR or check locale -a
+
 
 def doctolib(df):
     #function to apply to retrieve date
@@ -68,6 +78,60 @@ def doctolib(df):
     return {'date' : list(mails_doc['cons_date'].values),
             'appointment' : list(mails_doc['appointment'].values)
            }
+
+
+def amazon(df):
+	#restriction to amazon emails
+	df_amazon = df.loc[df.cat=='amazon']
+	#get all amazon orders
+	df_amazon = df_amazon.loc[df_amazon.body.str.contains("Votre Expédition ")]
+
+	res = []
+
+	for el in df.body:
+	    tmp = {}
+	    
+	    # total cost parsing
+	    try:
+	        total_cost = re.findall(r'Montant total pour cet envoi : EUR \d{0,100000},\d\d', el)[0]
+	        tmp['total_cost'] = re.findall(r'\d{0,100000},\d\d',total_cost)[0]
+	    except:
+	        continue
+	    # payment tool parsing
+	    try:
+	        tmp['payment_tool'] = re.findall(r'Payé par (.*?): ', el)[0]
+	    except:
+	        tmp['payment_tool'] = ''
+	        
+	    # delivering date parsing
+	    try:
+	        date = re.findall(r'Livraison : \n (.*?) \n \n', el, re.DOTALL)[0]
+	        date = datetime.strptime(date, '%A %d %B %Y')
+	    except:
+	        date = None
+	    
+	    tmp['date'] = date
+	    
+	    #parsing products
+	    products = re.findall(r'\(Vendu par (.*?) \n \n', el, re.DOTALL)
+	    
+	    if products==[]:
+	        continue
+	    
+	    tmp['articles'] = []
+	    
+	    for prod in products:
+	        res_prod = {}
+	        res_prod['seller'] = prod.split(') :')[0]
+	        
+	        prod = prod.split('\n ')[1:]
+	        
+	        res_prod['article'] = prod[0]
+	        res_prod['price'] = re.findall(r'\d{0,100000},\d\d', prod[1])[0]
+	        
+	        tmp['articles'] += [res_prod]
+        res += [tmp]
+	return res
 
 # Call each function referenced in the services.txt file
 def extractServiceInfo(df):
