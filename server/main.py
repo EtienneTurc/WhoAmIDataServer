@@ -11,11 +11,20 @@ app = Flask(__name__)
 CORS(app)
 
 @cross_origin
-@app.route('/analytics', methods=['POST'])
+@app.route('/analytics/mail', methods=['POST'])
 def mailAnalytics():
-
     df = pd.DataFrame(request.json['received'])
     df['cat'] = df.headers.apply(tag_mail)
     res = extractServiceInfo(df)
 
-    return res #{"result":"non merci, bisous"}
+    return res
+
+
+@cross_origin
+@app.route('/analytics/drive', methods=['POST'])
+def driveAnalytics():
+    df = pd.DataFrame(request.json['received'])
+    df['cat'] = df.headers.apply(tag_mail)
+    res = extractServiceInfo(df)
+
+    return res
