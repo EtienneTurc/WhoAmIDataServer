@@ -28,9 +28,10 @@ def lydia(df):
     mails_lydia['transaction'] = mails_lydia.body.apply(find_price)
     mails_lydia = mails_lydia.loc[mails_lydia.transaction.isna()==False]
 
-    return {'date' : list(mails_lydia['date'].values),
-            'transaction' : list(mails_lydia['transaction'].values)
-            }
+    return mails_lydia[['date', 'transaction']].to_dict('records')
+    # {'date' : list(mails_lydia['date'].values),
+    #         'transaction' : list(mails_lydia['transaction'].values)
+    #         }
 
 from datetime import datetime
 import locale
@@ -90,7 +91,6 @@ def amazon(df):
 
     for el in df.body:
         tmp = {}
-
         # total cost parsing
         try:
             total_cost = re.findall(r'Montant total pour cet envoi : EUR \d{0,100000},\d\d', el)[0]
@@ -102,7 +102,6 @@ def amazon(df):
             tmp['payment_tool'] = re.findall(r'Payé par (.*?): ', el)[0]
         except:
             tmp['payment_tool'] = ''
-
         # delivering date parsing
         try:
             date = re.findall(r'Livraison : \n (.*?) \n \n', el, re.DOTALL)[0]
@@ -115,6 +114,7 @@ def amazon(df):
         #parsing products
         products = re.findall(r'\(Vendu par (.*?) \n \n', el, re.DOTALL)
 
+        #if no product pass
         if products==[]:
             continue
 
