@@ -28,9 +28,10 @@ def lydia(df):
     mails_lydia['transaction'] = mails_lydia.body.apply(find_price)
     mails_lydia = mails_lydia.loc[mails_lydia.transaction.isna()==False]
 
-    return {'date' : list(mails_lydia['date'].values),
-            'transaction' : list(mails_lydia['transaction'].values)
-            }
+    return mails_lydia[['date', 'transaction']].to_dict('records')
+    # {'date' : list(mails_lydia['date'].values),
+    #         'transaction' : list(mails_lydia['transaction'].values)
+    #         }
 
 from datetime import datetime
 import locale
