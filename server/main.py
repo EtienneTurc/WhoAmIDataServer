@@ -11,7 +11,7 @@ app = Flask(__name__)
 CORS(app)
 
 @cross_origin
-@app.route('/analytics', methods=['POST'])
+@app.route('/analytics/mail', methods=['POST'])
 def mailAnalytics():
 
     df = pd.DataFrame(request.json['received'])
