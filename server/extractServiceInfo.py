@@ -21,14 +21,12 @@ def lydia(df):
     mails_lydia = df.loc[df.cat=='lydia'][['date', 'body']]
     
     if mails_lydia.shape[0] == 0:
-        return {'date' : [],
-                'transaction' : []
-               }
+        return []
 
-    mails_lydia['transaction'] = mails_lydia.body.apply(find_price)
-    mails_lydia = mails_lydia.loc[mails_lydia.transaction.isna()==False]
+    mails_lydia['amount'] = mails_lydia.body.apply(find_price)
+    mails_lydia = mails_lydia.loc[mails_lydia.amount.isna()==False]
 
-    return mails_lydia[['date', 'transaction']].to_dict('records')
+    return mails_lydia[['date', 'amount']].to_dict('records')
     # {'date' : list(mails_lydia['date'].values),
     #         'transaction' : list(mails_lydia['transaction'].values)
     #         }
@@ -94,8 +92,11 @@ def amazon(df):
         
         # total cost parsing
         try:
-            total_cost = re.findall(r'Montant total pour cet envoi : EUR \d{0,100000},\d\d', el)[0]
-            tmp['total_cost'] = re.findall(r'\d{0,100000},\d\d',total_cost)[0]
+            amount = re.findall(r'Montant total pour cet envoi : EUR \d{0,100000},\d\d', el)[0]
+            amount = re.findall(r'\d{0,100000},\d\d',amount)[0]
+            # replacing the , with . if necessary
+            amount = amount.replace(",", ".")
+            tmp['amount'] = float(amount)
         except:
             continue
         # payment tool parsing
@@ -108,10 +109,11 @@ def amazon(df):
         try:
             date = re.findall(r'Livraison : \n (.*?) \n \n', el, re.DOTALL)[0]
             date = datetime.strptime(date, '%A %d %B %Y')
+        
         except:
             date = None
         
-        tmp['date'] = date
+        tmp['date'] = str(date.timestamp()*1000) # converting to unix millisecs
         
         #parsing products
         products = re.findall(r'\(Vendu par (.*?) \n \n', el, re.DOTALL)
@@ -129,7 +131,10 @@ def amazon(df):
             prod = prod.split('\n ')[1:]
             
             res_prod['article'] = prod[0]
-            res_prod['price'] = re.findall(r'\d{0,100000},\d\d', prod[1])[0]
+            price =  re.findall(r'\d{0,100000},\d\d', prod[1])[0]
+            # replacing the , with . if necessary
+            price = price.replace(",", ".")
+            res_prod['price'] = float(price)
             
             tmp['articles'] += [res_prod]
         res += [tmp]
