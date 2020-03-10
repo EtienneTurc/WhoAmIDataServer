@@ -135,6 +135,60 @@ def amazon(df):
         res += [tmp]
     return res
 
+def uber_rides(df):
+    df_uber = df.loc[df.cat=='uber']
+
+    res = []
+
+    for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False):
+        tmp = {}
+        # place
+        try:
+            departure, destination = re.findall(r'\d\d:\d\d (.*?) \d\d:\d\d (.*?) Invitez', el)[0]
+            tmp['departure'] = departure
+            tmp['destination'] = destination
+        except:
+            continue
+        
+        # price    
+        try:
+            price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ',el )[0]
+            price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
+            tmp['price'] = price
+        except:
+            price = None
+            tmp['price'] = price
+            pass
+        
+        # distance
+        try:
+            distance = re.findall(r'\d{1,1000}.{0,1}\d{0,1000} km', el)[0]
+            tmp['distance'] = distance
+        except:
+            distance = None
+            tmp['distance'] = distance
+            pass
+        
+        # date
+        try:
+            horaire = re.findall(r'\d\d:\d\d', el)
+            start = datetime.strptime(horaire[0], '%H:%M')
+            end = datetime.strptime(horaire[1], '%H:%M')
+            start = start.replace(year = date.year, month = date.month, day = date.day)
+            end = end.replace(year = date.year, month = date.month, day = date.day)
+            tmp['start'] = start
+            tmp['end'] = end
+        except:
+            start = None
+            end = None
+            tmp['start'] = start
+            tmp['end'] = end
+            pass
+        
+        res += [tmp]
+       
+    return res
+
 # Call each function referenced in the services.txt file
 def extractServiceInfo(df):
     res = {}

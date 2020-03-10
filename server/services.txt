@@ -1,3 +1,4 @@
 lydia
 doctolib
 amazon
+uber_rides
