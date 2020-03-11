@@ -193,8 +193,8 @@ def uber_rides(df):
         except:
             start = None
             end = None
-            tmp['start'] = start
-            tmp['end'] = end
+            tmp['start'] = datetime.timestamp(start)
+            tmp['end'] = datetime.timestamp(end)
             pass
         
         res += [tmp]
@@ -244,8 +244,8 @@ def uber_bicycle(df):
             end = datetime.strptime(horaire[1], '%H:%M')
             start = start.replace(year = date.year, month = date.month, day = date.day)
             end = end.replace(year = date.year, month = date.month, day = date.day)
-            tmp['start'] = start
-            tmp['end'] = end
+            tmp['start'] = datetime.timestamp(start)
+            tmp['end'] = datetime.timestamp(end)
         except:
             start = None
             end = None
