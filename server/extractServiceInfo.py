@@ -153,6 +153,7 @@ def uber_rides(df):
     res = []
 
     for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False):
+        date = datetime.fromtimestamp(int(date)/1000)
         tmp = {}
         # place
         try:
@@ -161,8 +162,8 @@ def uber_rides(df):
             tmp['destination'] = destination
         except:
             continue
-        
-        # price    
+
+        # price
         try:
             price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ',el )[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
@@ -171,7 +172,7 @@ def uber_rides(df):
             price = None
             tmp['price'] = price
             pass
-        
+
         # distance
         try:
             distance = re.findall(r'\d{1,1000}.{0,1}\d{0,1000} km', el)[0]
@@ -180,7 +181,7 @@ def uber_rides(df):
             distance = None
             tmp['distance'] = distance
             pass
-        
+
         # date
         try:
             horaire = re.findall(r'\d\d:\d\d', el)
@@ -188,17 +189,17 @@ def uber_rides(df):
             end = datetime.strptime(horaire[1], '%H:%M')
             start = start.replace(year = date.year, month = date.month, day = date.day)
             end = end.replace(year = date.year, month = date.month, day = date.day)
-            tmp['start'] = start
-            tmp['end'] = end
+            tmp['start'] = str(int(start.timestamp()*1000))
+            tmp['end'] = str(int(end.timestamp()*1000))
         except:
             start = None
             end = None
-            tmp['start'] = datetime.timestamp(start)
-            tmp['end'] = datetime.timestamp(end)
+            tmp['start'] = start
+            tmp['end'] = end
             pass
-        
+
         res += [tmp]
-       
+
     return res
 
 def uber_bicycle(df):
@@ -209,6 +210,7 @@ def uber_bicycle(df):
     res = []
 
     for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False):
+        date = datetime.fromtimestamp(int(date)/1000)
         tmp = {}
         # place
         try:
@@ -217,8 +219,8 @@ def uber_bicycle(df):
             tmp['destination'] = destination
         except:
             continue
-        
-        # price    
+
+        # price
         try:
             price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ',el )[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
@@ -227,7 +229,7 @@ def uber_bicycle(df):
             price = None
             tmp['price'] = price
             pass
-        
+
         # distance
         try:
             distance = re.findall(r'\d{1,1000}.{0,1}\d{0,1000} kilomètres', el)[0]
@@ -236,7 +238,7 @@ def uber_bicycle(df):
             distance = None
             tmp['distance'] = distance
             pass
-        
+
         # date
         try:
             horaire = re.findall(r'\d\d:\d\d', el)
@@ -244,17 +246,17 @@ def uber_bicycle(df):
             end = datetime.strptime(horaire[1], '%H:%M')
             start = start.replace(year = date.year, month = date.month, day = date.day)
             end = end.replace(year = date.year, month = date.month, day = date.day)
-            tmp['start'] = datetime.timestamp(start)
-            tmp['end'] = datetime.timestamp(end)
+            tmp['start'] = str(int(start.timestamp() *1000))
+            tmp['end'] = str(int(end.timestamp() *1000))
         except:
             start = None
             end = None
             tmp['start'] = start
             tmp['end'] = end
             pass
-        
+
         res += [tmp]
-        
+
     return res
 
 # Call each function referenced in the services.txt file
