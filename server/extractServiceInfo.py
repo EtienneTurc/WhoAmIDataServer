@@ -259,6 +259,54 @@ def uber_bicycle(df):
 
     return res
 
+def uber_eats(df):
+    df_uber = df.loc[:1,:]
+
+    res = []
+    for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False): 
+        tmp = {}
+        
+        # price   
+        try:
+            price = re.findall(r'Total: \d{1,1000},\d{2,1000} € ',el )[0]
+            price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
+            tmp['price'] = price
+        except:
+            price = None
+            tmp['price'] = price
+            pass
+        
+        # restaurant
+        try:
+            restaurant = re.findall(r'commandé chez (.*?)\.',el )[0]
+            tmp['restaurant'] = restaurant
+        except:
+            tmp['restaurant'] = None
+            pass
+
+        # articles
+        try:
+            cmd = re.findall(r'Total (.*?) Montant facturé ', el, re.DOTALL)[0]
+            articles = re.findall(r'\d{1,3} \n(.*?) \n\d{1,1000},\d\d €',cmd, re.DOTALL)[:-1]
+            tmp['articles'] = articles
+        except:
+            tmp['articles'] = None
+            pass
+        
+        # date
+        try:
+            date = re.findall(r'Total: \d{1,1000},\d{2,1000} € \n(.*?) \n', el)[0]
+            date = datetime.strptime(date, '%a, %b %d, %Y')
+            date = str(date.timestamp()*1000)
+            tmp['date'] = date
+        except:
+            tmp['date'] = None
+            pass
+        
+        res += [tmp]
+
+    return res
+
 # Call each function referenced in the services.txt file
 
 

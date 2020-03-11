@@ -3,3 +3,4 @@ doctolib
 amazon
 uber_rides
 uber_bicycle
+uber_eats
