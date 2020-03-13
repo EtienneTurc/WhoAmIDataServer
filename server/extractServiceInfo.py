@@ -157,7 +157,7 @@ def uber_rides(df):
         tmp = {}
         # place
         try:
-            departure, destination = re.findall(r'\d\d:\d\d (.*?) \d\d:\d\d (.*?) Invitez', el)[0]
+            departure, destination = re.findall(r'\d{1,2}:\d{1,2} (.*?) \d{1,2}:\d{1,2} (.*?) Invitez', el)[0]
             tmp['departure'] = departure
             tmp['destination'] = destination
         except:
@@ -184,7 +184,7 @@ def uber_rides(df):
 
         # date
         try:
-            horaire = re.findall(r'\d\d:\d\d', el)
+            horaire = re.findall(r'\d{1,2}:\d\d', el)
             start = datetime.strptime(horaire[0], '%H:%M')
             end = datetime.strptime(horaire[1], '%H:%M')
             start = start.replace(year = date.year, month = date.month, day = date.day)
@@ -205,7 +205,7 @@ def uber_rides(df):
 def uber_bicycle(df):
     df_uber = df.loc[df.cat=='uber']
 
-    df_uber = df_uber.loc[df_uber.body.str.contains("vélos électriques")]
+    # df_uber = df_uber.loc[df_uber.body.str.contains("vélos électriques")]
 
     res = []
 
@@ -214,7 +214,7 @@ def uber_bicycle(df):
         tmp = {}
         # place
         try:
-            departure, destination = re.findall(r'\d\d:\d\d (.*?) \d\d:\d\d (.*?) contacter', el)[0]
+            departure, destination = re.findall(r'\d{1,2}:\d\d (.*?) \d{1,2}:\d\d (.*?) contacter', el)[0]
             tmp['departure'] = departure
             tmp['destination'] = destination
         except:
@@ -241,7 +241,7 @@ def uber_bicycle(df):
 
         # date
         try:
-            horaire = re.findall(r'\d\d:\d\d', el)
+            horaire = re.findall(r'\d{1,2}:\d\d', el)
             start = datetime.strptime(horaire[0], '%H:%M')
             end = datetime.strptime(horaire[1], '%H:%M')
             start = start.replace(year = date.year, month = date.month, day = date.day)
