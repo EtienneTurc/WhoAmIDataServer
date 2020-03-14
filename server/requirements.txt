@@ -2,3 +2,4 @@ flask
 flask-cors
 unidecode
 pandas
+redis
