@@ -1,13 +1,12 @@
 import pandas as pd
-from extractServiceInfo import extractServiceInfo
-from utils import tag_mail
 from flask import Flask, escape, request
 from flask_cors import CORS, cross_origin
 import time
 
-import redis
-r = redis.Redis()
-
+from extractServiceInfo import extractServiceInfo
+from extractWords import getWords
+from words import addWordDictToSession, getWordDictFromSession
+from utils import tag_mail
 
 app = Flask(__name__)
 CORS(app)
@@ -19,6 +18,11 @@ def mailAnalytics():
     df = pd.DataFrame(request.json['received'])
     df['cat'] = df.headers.apply(tag_mail)
     res = extractServiceInfo(df)
+
+    # print(request.json['sent'])
+    # print(pd.DataFrame(request.json['sent']))
+    addWordDictToSession(request.json['token'], getWords(
+        pd.DataFrame(request.json['sent'])))
 
     return res
 
@@ -36,10 +40,5 @@ def driveAnalytics():
 @cross_origin
 @app.route('/analytics/words', methods=['GET'])
 def words():
-    """
-    Returns list of words in the session, then deletes them.
-    """
-    wordList = []
-    while(r.llen("session") != 0):
-        wordList.append(r.rpop("session").decode("utf-8"))
-    return {"words": wordList}
+    words = getWordDictFromSession(request.args.get('token'))
+    return {"words": words}

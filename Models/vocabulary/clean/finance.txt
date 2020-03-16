@@ -1,34 +1,33 @@
-administration
-affaire
+american express
 argent
 argentier
+b for bank
 banque
+banque populaire
+banque postale
 banqueroute
+bnp
 bourse
+boursorama
 budget
 budgetaire
-caisse
-calonne
+caisse d epargne
 capital
 charge
-colbert
-commerce
+cic
 comptabilite
 comptable
 contribuable
 contribution
-controle
-controleur
-corruption
-crise financiere
+credit agricole
+credit du nord
+credit lyonnais
+credit mutuel
 deficit
-definanciariser
-delit d initie
 depense
-echiquier
 economie
 emprunt
-entreprise
+facture
 faillite
 financement
 financier
@@ -37,30 +36,29 @@ financierement
 fisc
 fiscal
 fiscalite
-fonds
-fouquet
-generalite
 gestion
+hello bank
+hsbc
+iban
 imposition
 impot
-intendant
-management
-ministere
-ministre
+ing
+lcl
+lydia
+marseillaise de credit
+mastercard
+monabanque
 monetaire
-necker
+n26
 portefeuille
-projet
-questeur
-recette
-receveur
-requin
 ressource
-service
+revolut
+rib
+smc
+societe generale
 speculation
-surintendant
 taxe
 tresor
 tresorerie
 tresorier
-vote
+visa

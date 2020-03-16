@@ -15,8 +15,8 @@ def strip_accents(text):
     return str(text)
 
 
-folder = "vocabulary/unclean"
-filename = 'alimentation.txt'
+folder = "vocabulary"
+filename = 'finance.txt'
 allFolder = True
 
 onlyfiles = [filename]
@@ -24,7 +24,7 @@ if allFolder:
     onlyfiles = [f for f in listdir(folder) if isfile(join(folder, f))]
 
 for file in onlyfiles:
-    with open(folder + "/" + file, encoding="utf-8") as f:
+    with open(folder + "/unclean/" + file, encoding="utf-8") as f:
         vocab = f.read()
 
     vocab = strip_accents(vocab)

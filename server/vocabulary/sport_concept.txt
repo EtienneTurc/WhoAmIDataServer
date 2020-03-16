@@ -1,0 +1,13 @@
+sport
+champion
+championnat
+club
+competition
+equipe
+gymnase
+joueur
+nageur
+olympique
+patinoire
+sportif
+sportive

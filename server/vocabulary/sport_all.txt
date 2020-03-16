@@ -1,0 +1,65 @@
+alpinisme
+amateur
+amateurisme
+arbitre
+arc
+athlete
+athletique
+athletisme
+automobile
+aviron
+badminton
+baseball
+basket
+basketball
+biathlon
+bobsleigh
+bodyboard
+boxe
+canoe
+cricket
+curling
+cyclisme
+equitation
+escrime
+eurosport
+football
+football americain
+frisbee
+golf
+gymnastique
+halterophilie
+handball
+hockey
+horseball
+judo
+karate
+karting
+kayak
+luge
+marathon
+natation
+natation synchronisee
+nba
+parapente
+petanque
+piscine
+planche a roulettes
+roller
+rugby
+skate
+skateboard
+ski
+ski de fond
+snowboard
+soccer
+sumo
+surf
+tennis
+tennis de table
+trampoline
+velo
+volley
+volleyball
+vtt
+waterpolo

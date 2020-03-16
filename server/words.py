@@ -7,7 +7,7 @@ For test purpose, you can add a word to fake sessions 'session' by just calling 
 import redis
 import sys
 
-r = redis.Redis()
+r = redis.Redis(decode_responses=True)
 
 
 def addWordToSession(word, session):
@@ -17,6 +17,18 @@ def addWordToSession(word, session):
 def addWordsToSession(words, session):
     for word in words:
         addWordToSession(word, session)
+
+
+def addWordDictToSession(session, words):
+    # print("ADDDING WORDS", words)
+    return r.hmset(session, words)
+
+
+def getWordDictFromSession(session, delete=True):
+    words = r.hgetall(session)
+    if delete:
+        r.delete(session)
+    return words
 
 
 if __name__ == "__main__":
