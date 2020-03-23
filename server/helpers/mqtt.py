@@ -3,10 +3,25 @@ import json
 
 
 def is_callback(channels):
-    def wrapper(func):
-        setattr(func, "channels", channels)
-        return func
-    return wrapper
+    def decorated(func):
+        def wraps(*args, **kwargs):
+            if args[0] == 'channels':
+                return channels
+            else:
+                response = func(*args, **kwargs)
+                return response
+        return wraps
+    return decorated
+
+
+@is_callback(["google/mail", "google/people"])
+def callback_test2(token):
+    print("callback from test2; token : {}".format(token))
+
+
+@is_callback(["google/mail"])
+def callback_test1(token):
+    print("callback from test1; token : {}".format(token))
 
 
 def dispatch(message, callbacks):
@@ -14,7 +29,7 @@ def dispatch(message, callbacks):
     Given a message, calls every callback that matches the message topic
     """
     for callback in callbacks:
-        if message.topic in callback.channels:
+        if message.topic in callback("channels"):
             callback(json.loads(message.payload)["token"])
 
 
@@ -30,7 +45,7 @@ class Service:
 
         to_subscribe = []
         for callback in self.callbacks:
-            for channel in callback.channels:
+            for channel in callback("channels"):
                 to_subscribe.append(channel)
 
         # subscibing to all relevant channels
@@ -44,13 +59,5 @@ class Service:
 
         self.client.loop_forever()
 
-
 if __name__ == "__main__":
-    # s = Service([callback_test2, callback_test1], "127.0.0.1", 1883)
-
-    @is_callback(["hey"])
-    def f(x):
-        return None
-
-    f.channels.append("test")
-    print(f.channels)
+    s = Service([callback_test2, callback_test1], "127.0.0.1", 1883)

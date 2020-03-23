@@ -9,5 +9,5 @@ pip install pandas
 pip install redis
 redis-server &
 export FLASK_ENV=development
-export FLASK_APP=main.py;
+export FLASK_APP=flask_server.py;
 flask run --host localhost;

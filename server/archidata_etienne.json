@@ -1,0 +1,39 @@
+{
+  "token": {
+    "raw": {
+      "facebook": {
+        "user": {}
+      },
+      "google": {
+        "people": {
+          "meta": { "authorized": true, "processing": true, "error": false }
+        },
+        "mail": {},
+        "drive": {}
+      }
+    },
+    "toDisplay": {
+      "Id": {
+        "firstName": { "value": "Etienne", "origins": [] },
+        "lastName": []
+      },
+      "words": {
+        "data": [
+          { "value": "String", "weight": 42, "origins": [] },
+          { "value": "String", "weight": 42, "origins": [] },
+          { "value": "String", "weight": 42, "origins": [] }
+        ],
+        "meta": {
+          "origins": ["Google", "Facebook"],
+          "processing": true,
+          "available": false,
+          "done": false,
+          "error": false
+        }
+      },
+      "lydia": { "data": [], "meta": [] },
+      "doctolib": [],
+      "uber": []
+    }
+  }
+}
