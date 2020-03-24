@@ -210,7 +210,7 @@ def uber_rides(df):
 def uber_bicycle(df):
     df_uber = df.loc[df.cat == 'uber']
 
-    # df_uber = df_uber.loc[df_uber.body.str.contains("vélos électriques")]
+    df_uber = df_uber.loc[df_uber.body.str.contains("velos electriques")]
 
     res = []
 
@@ -220,7 +220,7 @@ def uber_bicycle(df):
         # place
         try:
             departure, destination = re.findall(
-                r'\d{1,2}:\d\d (.*?) \d{1,2}:\d\d (.*?) contacter', el)[0]
+                r'\d{1,2}:\d\d (.*?) \d{1,2}:\d\d (.*?) contacter l\'assistance', el)[0]
             tmp['departure'] = departure
             tmp['destination'] = destination
         except:
@@ -239,7 +239,8 @@ def uber_bicycle(df):
         # distance
         try:
             distance = re.findall(
-                r'\d{1,1000}.{0,1}\d{0,1000} kilomètres', el)[0]
+                r'\d{1,1000}.{0,1}\d{0,1000} kilometres', el)[0]
+            # r'\d{1,1000}.{0,1}\d{0,1000} kilomètres', el)[0]
             tmp['distance'] = distance
         except:
             distance = None
