@@ -51,7 +51,7 @@ def doctolib(df):
     res = []
 
     for date_mail, el in mails_doc.loc[:, ['date', 'body']].itertuples(index=False):
-        date = datetime.fromtimestamp(int(date)/1000)
+        date = datetime.fromtimestamp(int(date_mail)/1000)
         tmp = {}
 
         try:
@@ -61,27 +61,29 @@ def doctolib(df):
         tmp['name'] = name
 
         try:
-            spe = re.findall(name +' \n(.*?) \n',el)[0]
+            spe = re.findall(name + ' \n(.*?) \n', el)[0]
         except:
             spe = None
         tmp['spe'] = spe
 
         try:
-            date = re.findall(spe +' \n(.*?) \n',el)[0]
+            date = re.findall(spe + ' \n(.*?) \n', el)[0]
             date = datetime.strptime(date, '%A %d %B a %Hh%M')
-            date = date.replace(year = date_mail.year)
+            date = date.replace(year=date_mail.year)
+            tmp['date'] = str(int(date.timestamp()*1000))
         except:
             date = None
-        tmp['date'] = str(int(date.timestamp()*1000))
+            tmp['date'] = None
 
         try:
-            address = re.findall(r"Acces & informations \n \n(.*?) \n \nOBTENIR L'ITINERAIRE", el, re.DOTALL)[0]
+            address = re.findall(
+                r"Acces & informations \n \n(.*?) \n \nOBTENIR L'ITINERAIRE", el, re.DOTALL)[0]
             address = ''.join(address.split('\n'))
         except:
             address = None
         tmp['address'] = address
 
-        res +=[tmp]
+        res += [tmp]
     return res
 
 
