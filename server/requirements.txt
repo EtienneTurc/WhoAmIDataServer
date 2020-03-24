@@ -5,3 +5,5 @@ pandas
 redis
 click
 paho-mqtt
+nose
+python-dotenv
