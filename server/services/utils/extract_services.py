@@ -321,7 +321,7 @@ def uber_eats(df):
 # Call each function referenced in the services.txt file
 
 
-def extractServiceInfo(df):
+def extract_services(df):
     res = {}
     for s in services:
         s = s.strip()
