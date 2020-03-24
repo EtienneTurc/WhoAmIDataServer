@@ -4,3 +4,4 @@ data
 .vscode
 server/env
 server/dump.rdb
+/env
