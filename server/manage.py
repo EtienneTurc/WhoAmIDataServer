@@ -20,6 +20,8 @@ def start(flush):
     """
     Starting all services. Waiting for MQTT messages.
     """
+    from dotenv import load_dotenv
+    load_dotenv()
     if flush:
         flushAllData()
     s = Service([google_mail_service])
