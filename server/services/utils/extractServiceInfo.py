@@ -2,6 +2,7 @@ from datetime import datetime
 import locale
 import re
 import pandas as pd
+from helpers.service import is_callback
 
 services = open("services.txt", "r").read().split("\n")
 services = [s.strip() for s in services if s]
@@ -9,9 +10,9 @@ services = [s.strip() for s in services if s]
 
 def lydia(df):
     def find_price(x):
-        res1 = re.findall(r"VOUS A RÉGLÉ \d+,\d+ €", x)
-        res2 = re.findall(r"\d+,\d+ € PAY", x)
-        res3 = re.findall(r"VOUS AVEZ RÉGLÉ \d+,\d+ €", x)
+        res1 = re.findall(r"VOUS A RÉGLÉ \d+,\d+ EU", x)
+        res2 = re.findall(r"\d+,\d+ EU PAY", x)
+        res3 = re.findall(r"VOUS AVEZ RÉGLÉ \d+,\d+ EU", x)
         if len(res1) == 1:
             return float(re.findall(r"\d+,\d+", res1[0])[0].replace(',', '.'))
         elif len(res2) == 1:
@@ -147,17 +148,19 @@ def amazon(df):
         res += [tmp]
     return res
 
+
 def uber_rides(df):
-    df_uber = df.loc[df.cat=='uber']
+    df_uber = df.loc[df.cat == 'uber']
 
     res = []
 
-    for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False):
+    for date, el in df_uber.loc[:, ['date', 'body']].itertuples(index=False):
         date = datetime.fromtimestamp(int(date)/1000)
         tmp = {}
         # place
         try:
-            departure, destination = re.findall(r'\d{1,2}:\d{1,2} (.*?) \d{1,2}:\d{1,2} (.*?) Invitez', el)[0]
+            departure, destination = re.findall(
+                r'\d{1,2}:\d{1,2} (.*?) \d{1,2}:\d{1,2} (.*?) Invitez', el)[0]
             tmp['departure'] = departure
             tmp['destination'] = destination
         except:
@@ -165,7 +168,7 @@ def uber_rides(df):
 
         # price
         try:
-            price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ',el )[0]
+            price = re.findall(r' Total: \d{1,1000},\d{2,1000} EU ', el)[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
             tmp['price'] = price
         except:
@@ -187,8 +190,9 @@ def uber_rides(df):
             horaire = re.findall(r'\d{1,2}:\d\d', el)
             start = datetime.strptime(horaire[0], '%H:%M')
             end = datetime.strptime(horaire[1], '%H:%M')
-            start = start.replace(year = date.year, month = date.month, day = date.day)
-            end = end.replace(year = date.year, month = date.month, day = date.day)
+            start = start.replace(
+                year=date.year, month=date.month, day=date.day)
+            end = end.replace(year=date.year, month=date.month, day=date.day)
             tmp['start'] = str(int(start.timestamp()*1000))
             tmp['end'] = str(int(end.timestamp()*1000))
         except:
@@ -202,19 +206,21 @@ def uber_rides(df):
 
     return res
 
+
 def uber_bicycle(df):
-    df_uber = df.loc[df.cat=='uber']
+    df_uber = df.loc[df.cat == 'uber']
 
     # df_uber = df_uber.loc[df_uber.body.str.contains("vélos électriques")]
 
     res = []
 
-    for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False):
+    for date, el in df_uber.loc[:, ['date', 'body']].itertuples(index=False):
         date = datetime.fromtimestamp(int(date)/1000)
         tmp = {}
         # place
         try:
-            departure, destination = re.findall(r'\d{1,2}:\d\d (.*?) \d{1,2}:\d\d (.*?) contacter', el)[0]
+            departure, destination = re.findall(
+                r'\d{1,2}:\d\d (.*?) \d{1,2}:\d\d (.*?) contacter', el)[0]
             tmp['departure'] = departure
             tmp['destination'] = destination
         except:
@@ -222,7 +228,7 @@ def uber_bicycle(df):
 
         # price
         try:
-            price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ',el )[0]
+            price = re.findall(r' Total: \d{1,1000},\d{2,1000} EU ', el)[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
             tmp['price'] = price
         except:
@@ -232,7 +238,8 @@ def uber_bicycle(df):
 
         # distance
         try:
-            distance = re.findall(r'\d{1,1000}.{0,1}\d{0,1000} kilomètres', el)[0]
+            distance = re.findall(
+                r'\d{1,1000}.{0,1}\d{0,1000} kilomètres', el)[0]
             tmp['distance'] = distance
         except:
             distance = None
@@ -244,10 +251,11 @@ def uber_bicycle(df):
             horaire = re.findall(r'\d{1,2}:\d\d', el)
             start = datetime.strptime(horaire[0], '%H:%M')
             end = datetime.strptime(horaire[1], '%H:%M')
-            start = start.replace(year = date.year, month = date.month, day = date.day)
-            end = end.replace(year = date.year, month = date.month, day = date.day)
-            tmp['start'] = str(int(start.timestamp() *1000))
-            tmp['end'] = str(int(end.timestamp() *1000))
+            start = start.replace(
+                year=date.year, month=date.month, day=date.day)
+            end = end.replace(year=date.year, month=date.month, day=date.day)
+            tmp['start'] = str(int(start.timestamp() * 1000))
+            tmp['end'] = str(int(end.timestamp() * 1000))
         except:
             start = None
             end = None
@@ -259,26 +267,27 @@ def uber_bicycle(df):
 
     return res
 
+
 def uber_eats(df):
-    df_uber = df.loc[:1,:]
+    df_uber = df.loc[:1, :]
 
     res = []
-    for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False): 
+    for date, el in df_uber.loc[:, ['date', 'body']].itertuples(index=False):
         tmp = {}
-        
-        # price   
+
+        # price
         try:
-            price = re.findall(r'Total: \d{1,1000},\d{2,1000} € ',el )[0]
+            price = re.findall(r'Total: \d{1,1000},\d{2,1000} EU ', el)[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
             tmp['price'] = price
         except:
             price = None
             tmp['price'] = price
             pass
-        
+
         # restaurant
         try:
-            restaurant = re.findall(r'commandé chez (.*?)\.',el )[0]
+            restaurant = re.findall(r'commandé chez (.*?)\.', el)[0]
             tmp['restaurant'] = restaurant
         except:
             tmp['restaurant'] = None
@@ -287,22 +296,24 @@ def uber_eats(df):
         # articles
         try:
             cmd = re.findall(r'Total (.*?) Montant facturé ', el, re.DOTALL)[0]
-            articles = re.findall(r'\d{1,3} \n(.*?) \n\d{1,1000},\d\d €',cmd, re.DOTALL)[:-1]
+            articles = re.findall(
+                r'\d{1,3} \n(.*?) \n\d{1,1000},\d\d EU', cmd, re.DOTALL)[:-1]
             tmp['articles'] = articles
         except:
             tmp['articles'] = None
             pass
-        
+
         # date
         try:
-            date = re.findall(r'Total: \d{1,1000},\d{2,1000} € \n(.*?) \n', el)[0]
+            date = re.findall(
+                r'Total: \d{1,1000},\d{2,1000} EU \n(.*?) \n', el)[0]
             date = datetime.strptime(date, '%a, %b %d, %Y')
             date = str(date.timestamp()*1000)
             tmp['date'] = date
         except:
             tmp['date'] = None
             pass
-        
+
         res += [tmp]
 
     return res
