@@ -3,11 +3,13 @@ import pandas as pd
 from helpers.service import is_callback
 from helpers.redis_helpers import getData, setData
 from services.utils.extract_services import extract_services
+from services.utils.extract_words import getWords
 from utils import tag_mail
 
 
 @is_callback(["raw/google/mail"])
 def google_mail_service(token):
+    print("beginning processing for raw/google/mail")
     df = pd.DataFrame()
     # try:
     df = pd.DataFrame(getData(token, "raw.google.mail.received"))
@@ -31,3 +33,11 @@ def google_mail_service(token):
 
     setData(token, "toDisplay.uberEats.data", res["uber_eats"])
     setData(token, "toDisplay.uberEats.meta.processing.google_mail", False)
+
+    word_list = getWords(df)
+
+    setData(token, "toDisplay.words.data", word_list)
+    setData(token, "toDisplay.words.meta.processing.google_mail", False)
+
+    print(res)
+    print(word_list)
