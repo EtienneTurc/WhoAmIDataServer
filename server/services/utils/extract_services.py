@@ -45,46 +45,45 @@ except:
 
 
 def doctolib(df):
-    # function to apply to retrieve date
-    def get_date(x):
-        tmp = x['snippet']
-        tmp = tmp.split(x['appointment'])[1]
-        tmp = tmp.split(' DÉPLACER')[0]
+    mails_doc = df.loc[df.cat == 'doctolib']
+
+    mails_doc = mails_doc.loc[mails_doc.snippet.str.contains("confirme")]
+
+    res = []
+
+    for date_mail, el in mails_doc.loc[:, ['date', 'body']].itertuples(index=False):
+        date = datetime.fromtimestamp(int(date)/1000)
+        tmp = {}
+
         try:
-            date = datetime.strptime(tmp, '%A %d %B à %Hh%M')
-            date = date.replace(year=x['date'].year)
+            name = re.findall(r'RDV confirme \n \n(.*?) \n', el)[0]
+        except:
+            name = None
+        tmp['name'] = name
+
+        try:
+            spe = re.findall(name +' \n(.*?) \n',el)[0]
+        except:
+            spe = None
+        tmp['spe'] = spe
+
+        try:
+            date = re.findall(spe +' \n(.*?) \n',el)[0]
+            date = datetime.strptime(date, '%A %d %B a %Hh%M')
+            date = date.replace(year = date_mail.year)
         except:
             date = None
-        return date
+        tmp['date'] = str(int(date.timestamp()*1000))
 
-    # restriction to doctolib mails
-    mails_doc = df.loc[df.cat == 'doctolib']
-    # restriction to confirmed appointments
-    mails_doc = mails_doc.loc[mails_doc.snippet.str.contains("confirmé")]
+        try:
+            address = re.findall(r"Acces & informations \n \n(.*?) \n \nOBTENIR L'ITINERAIRE", el, re.DOTALL)[0]
+            address = ''.join(address.split('\n'))
+        except:
+            address = None
+        tmp['address'] = address
 
-    if mails_doc.shape[0] == 0:
-        return {'date': [],
-                'appointment': []
-                }
-
-    # Regex to match weekdays
-    reg_weekdays = re.compile(
-        r' Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche')
-
-    # Extracting name of doctor + sector by splitting on confirmé and weekdays regex
-    mails_doc['appointment'] = mails_doc.snippet.apply(
-        lambda x: reg_weekdays.split(x.split('confirmé ')[1])[0])
-
-    # Retriving appointment date, the year is the one of the email notification
-    mails_doc['cons_date'] = mails_doc[['snippet',
-                                        'date', 'appointment']].apply(get_date, axis=1)
-
-    # we discard wrong matchings
-    mails_doc = mails_doc.loc[mails_doc['cons_date'].isna() == False]
-
-    return {'date': list(mails_doc['cons_date'].values),
-            'appointment': list(mails_doc['appointment'].values)
-            }
+        res +=[tmp]
+    return res
 
 
 def amazon(df):
