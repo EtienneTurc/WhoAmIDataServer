@@ -23,6 +23,14 @@ def getData(token, path):
     return res
 
 
+def addToList(token, path, value):
+    try:
+        return redis_client.execute_command(
+            "JSON.ARRAPPEND", f"{token}", f".{path}", f"{json.dumps(value)}")
+    except Exception as ex:
+        print(ex)
+
+
 def flushAllData():
     redis_client.flushall()
 
