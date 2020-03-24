@@ -1,5 +1,10 @@
-import paho.mqtt.client as mqtt
 import json
+import os
+
+import paho.mqtt.client as mqtt
+import redis
+
+from helpers.redis_helpers import getData, setData
 
 
 def is_callback(channels):
@@ -15,18 +20,22 @@ def dispatch(message, callbacks):
     """
     for callback in callbacks:
         if message.topic in callback.channels:
-            callback(json.loads(message.payload)["token"])
+            res = callback(json.loads(message.payload)["token"])
+            print(res)
 
 
 class Service:
 
-    def __init__(self, callbacks, host, port):
-        self.client = mqtt.Client()
-        self.callbacks = callbacks
-        self.host = host
-        self.port = port
+    def __init__(self, callbacks):
 
-        self.client.connect(host, port)
+        # self.redis = redis.Redis(os.getenv("REDIS_HOST", "127.0.0.1"),
+        #                          int(os.getenv("REDIS_PORT", 6379)))
+
+        self.mqtt = mqtt.Client()
+        self.mqtt.connect(os.getenv("MQTT_HOST", "127.0.0.1"),
+                          int(os.getenv("MQTT_PORT", 1883)))
+
+        self.callbacks = callbacks
 
         to_subscribe = []
         for callback in self.callbacks:
@@ -35,22 +44,24 @@ class Service:
 
         # subscibing to all relevant channels
 
-        [self.client.subscribe(channel) for channel in list(set(to_subscribe))]
+        [self.mqtt.subscribe(channel) for channel in list(set(to_subscribe))]
 
         # dispatching the messages to the right callback(s)
 
-        self.client.on_message = lambda client, userdata, msg: dispatch(
+        self.mqtt.on_message = lambda client, userdata, msg: dispatch(
             msg, self.callbacks)
 
-        self.client.loop_forever()
+        self.mqtt.loop_forever()
 
 
 if __name__ == "__main__":
-    # s = Service([callback_test2, callback_test1], "127.0.0.1", 1883)
+    from dotenv import load_dotenv
+    load_dotenv()
+
+    # print(os.getenv("MQTT_PORT"))
 
     @is_callback(["hey"])
     def f(x):
-        return None
+        return "bla"
 
-    f.channels.append("test")
-    print(f.channels)
+    s = Service([f])
