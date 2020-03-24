@@ -11,22 +11,23 @@ redis_client = redis.Redis(os.getenv("REDIS_HOST", "127.0.0.1"),
 def setData(token, path, value):
     try:
         return redis_client.execute_command(
-            "JSON.SET", f"{token}", f".{path}", f"{json.dumps(value)}")
+            "JSON.SET", "{}".format(token), ".{}".format(path), "{}".format(json.dumps(value)))
     except Exception as ex:
         print(ex)
 
 
 def getData(token, path):
-    res = redis_client.execute_command("JSON.GET", f"{token}", f".{path}")
+    res = redis_client.execute_command(
+        "JSON.GET", "{}".format(token), ".{}".format(path))
     if res:
-        res = json.loads(res)
+        res = json.loads(res.decode("utf-8"))
     return res
 
 
 def addToList(token, path, value):
     try:
         return redis_client.execute_command(
-            "JSON.ARRAPPEND", f"{token}", f".{path}", f"{json.dumps(value)}")
+            "JSON.ARRAPPEND", "{}".format(token), ".{}".format(path), "{}".format(json.dumps(value)))
     except Exception as ex:
         print(ex)
 
