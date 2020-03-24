@@ -3,3 +3,5 @@ flask-cors
 unidecode
 pandas
 redis
+click
+paho-mqtt
