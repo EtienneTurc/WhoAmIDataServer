@@ -13,9 +13,21 @@ def google_mail_service(token):
     df = pd.DataFrame(getData(token, "raw.google.mail.received"))
     df['cat'] = df.headers.apply(tag_mail)
     res = extract_services(df)
+
     setData(token, "toDisplay.amazon.data", res["amazon"])
     setData(token, "toDisplay.amazon.meta.processing.google_mail", False)
+
     setData(token, "toDisplay.doctolib.data", res["doctolib"])
     setData(token, "toDisplay.doctolib.meta.processing", False)
+
     setData(token, "toDisplay.lydia.data", res["lydia"])
     setData(token, "toDisplay.lydia.meta.processing.google_mail", False)
+
+    setData(token, "toDisplay.uberRides.data", res["uber_rides"])
+    setData(token, "toDisplay.uberRides.meta.processing.google_mail", False)
+
+    setData(token, "toDisplay.uberBikes.data", res["uber_bicycle"])
+    setData(token, "toDisplay.uberBikes.meta.processing.google_mail", False)
+
+    setData(token, "toDisplay.uberEats.data", res["uber_eats"])
+    setData(token, "toDisplay.uberEats.meta.processing.google_mail", False)
