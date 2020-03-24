@@ -2,7 +2,6 @@ from datetime import datetime
 import locale
 import re
 import pandas as pd
-from helpers.service import is_callback
 
 services = open("services.txt", "r").read().split("\n")
 services = [s.strip() for s in services if s]
