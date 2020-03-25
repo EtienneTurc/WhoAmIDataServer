@@ -28,7 +28,8 @@ client.connect("localhost", 1883, 60)
 # handles reconnecting.
 # Other loop*() functions are available that give a threaded interface and a
 # manual interface.
-client.publish("start/google/mail", json.dumps({"token" : "thisismsytoken"}))
-client.publish("message", json.dumps({"token" : "thisismsytoken"}))
+client.publish("start/google/mail", json.dumps({"token": "thisismsytoken"}))
+client.publish("message", json.dumps({"token": "thisismsytoken"}))
+client.publish("hey", json.dumps({"token": "thisismsytoken"}))
 client.loop_forever()
 # client.publish("test2")

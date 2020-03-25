@@ -3,7 +3,7 @@ from flask import Flask, escape, request
 from flask_cors import CORS, cross_origin
 import time
 
-from extractServiceInfo import extractServiceInfo
+from extract_services import extract_services
 from extractWords import getWords
 from words import addWordDictToSession, getWordDictFromSession
 from utils import tag_mail
@@ -17,7 +17,7 @@ CORS(app)
 def mailAnalytics():
     df = pd.DataFrame(request.json['received'])
     df['cat'] = df.headers.apply(tag_mail)
-    res = extractServiceInfo(df)
+    res = extract_services(df)
 
     # print(request.json['sent'])
     # print(pd.DataFrame(request.json['sent']))
@@ -32,7 +32,7 @@ def mailAnalytics():
 def driveAnalytics():
     df = pd.DataFrame(request.json['received'])
     df['cat'] = df.headers.apply(tag_mail)
-    res = extractServiceInfo(df)
+    res = extract_services(df)
 
     return res
 
