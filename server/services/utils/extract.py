@@ -169,7 +169,7 @@ def uber_rides(df):
 
         # price
         try:
-            price = re.findall(r' Total: \d{1,1000},\d{2,1000} EU ', el)[0]
+            price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ', el)[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
             tmp['price'] = price
         except:
@@ -229,7 +229,7 @@ def uber_jump(df):
 
         # price
         try:
-            price = re.findall(r' Total: \d{1,1000},\d{2,1000} EU ', el)[0]
+            price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ', el)[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
             tmp['price'] = price
         except:
@@ -307,7 +307,7 @@ def uber_eats(df):
         # date
         try:
             date = re.findall(
-                r'Total: \d{1,1000},\d{2,1000} EU \n(.*?) \n', el)[0]
+                r'Total: \d{1,1000},\d{2,1000} € \n(.*?) \n', el)[0]
             date = datetime.strptime(date, '%a, %b %d, %Y')
             date = str(date.timestamp()*1000)
             tmp['date'] = date

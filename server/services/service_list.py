@@ -4,7 +4,6 @@ from helpers.service import is_callback
 from helpers.redis_helpers import getData, setData
 from services.utils.extract import extract_services, tag_mail
 from services.utils.words import getWords
-# from utils import tag_mail
 
 
 @is_callback(["raw/google/mail"])
@@ -29,5 +28,3 @@ def google_mail_service(token):
 
     except Exception as err:
         print(err)
-
-        # faire décorateur pour chaque sous-service pour l'output
