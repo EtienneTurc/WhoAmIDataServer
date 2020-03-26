@@ -9,9 +9,9 @@ services = [s.strip() for s in services if s]
 
 def lydia(df):
     def find_price(x):
-        res1 = re.findall(r"VOUS A RÉGLÉ \d+,\d+ EU", x)
-        res2 = re.findall(r"\d+,\d+ EU PAY", x)
-        res3 = re.findall(r"VOUS AVEZ RÉGLÉ \d+,\d+ EU", x)
+        res1 = re.findall(r"VOUS A RÉGLÉ \d+,\d+ €", x)
+        res2 = re.findall(r"\d+,\d+ € PAY", x)
+        res3 = re.findall(r"VOUS AVEZ RÉGLÉ \d+,\d+ €", x)
         if len(res1) == 1:
             return float(re.findall(r"\d+,\d+", res1[0])[0].replace(',', '.'))
         elif len(res2) == 1:
@@ -46,7 +46,7 @@ except:
 def doctolib(df):
     mails_doc = df.loc[df.cat == 'doctolib']
 
-    mails_doc = mails_doc.loc[mails_doc.snippet.str.contains("confirme")]
+    mails_doc = mails_doc.loc[mails_doc.snippet.str.contains("confirmé")]
 
     res = []
 
@@ -55,7 +55,7 @@ def doctolib(df):
         tmp = {}
 
         try:
-            name = re.findall(r'RDV confirme \n \n(.*?) \n', el)[0]
+            name = re.findall(r'RDV confirmé \n \n(.*?) \n', el)[0]
         except:
             name = None
         tmp['name'] = name
@@ -77,7 +77,7 @@ def doctolib(df):
 
         try:
             address = re.findall(
-                r"Acces & informations \n \n(.*?) \n \nOBTENIR L'ITINERAIRE", el, re.DOTALL)[0]
+                r"Accès & informations \n \n(.*?) \n \nOBTENIR L'ITINERAIRE", el, re.DOTALL)[0]
             address = ''.join(address.split('\n'))
         except:
             address = None
@@ -210,7 +210,7 @@ def uber_rides(df):
 def uber_bicycle(df):
     df_uber = df.loc[df.cat == 'uber']
 
-    df_uber = df_uber.loc[df_uber.body.str.contains("velos electriques")]
+    df_uber = df_uber.loc[df_uber.body.str.contains("vélos électriques")]
 
     res = []
 
@@ -239,8 +239,7 @@ def uber_bicycle(df):
         # distance
         try:
             distance = re.findall(
-                r'\d{1,1000}.{0,1}\d{0,1000} kilometres', el)[0]
-            # r'\d{1,1000}.{0,1}\d{0,1000} kilomètres', el)[0]
+                r'\d{1,1000}.{0,1}\d{0,1000} kilomètres', el)[0]
             tmp['distance'] = distance
         except:
             distance = None
@@ -278,7 +277,7 @@ def uber_eats(df):
 
         # price
         try:
-            price = re.findall(r'Total: \d{1,1000},\d{2,1000} EU ', el)[0]
+            price = re.findall(r'Total: \d{1,1000},\d{2,1000} € ', el)[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
             tmp['price'] = price
         except:
@@ -298,7 +297,7 @@ def uber_eats(df):
         try:
             cmd = re.findall(r'Total (.*?) Montant facturé ', el, re.DOTALL)[0]
             articles = re.findall(
-                r'\d{1,3} \n(.*?) \n\d{1,1000},\d\d EU', cmd, re.DOTALL)[:-1]
+                r'\d{1,3} \n(.*?) \n\d{1,1000},\d\d €', cmd, re.DOTALL)[:-1]
             tmp['articles'] = articles
         except:
             tmp['articles'] = None
