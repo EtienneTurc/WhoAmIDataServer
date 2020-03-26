@@ -13,26 +13,12 @@ def google_mail_service(token):
     try:
         df_received = pd.DataFrame(getData(token, "raw.google.mail.received"))
         df_received['cat'] = df_received.headers.apply(tag_mail)
-        res = extract_services(df_received)
 
-        setData(token, "toDisplay.amazon.data", res["amazon"])
-        setData(token, "toDisplay.amazon.meta.processing.google_mail", False)
-
-        setData(token, "toDisplay.doctolib.data", res["doctolib"])
-        setData(token, "toDisplay.doctolib.meta.processing", False)
-
-        setData(token, "toDisplay.lydia.data", res["lydia"])
-        setData(token, "toDisplay.lydia.meta.processing.google_mail", False)
-
-        setData(token, "toDisplay.uberRides.data", res["uber_rides"])
-        setData(token, "toDisplay.uberRides.meta.processing.google_mail", False)
-
-        setData(token, "toDisplay.uberBikes.data", res["uber_jump"])
-        setData(token, "toDisplay.uberBikes.meta.processing.google_mail", False)
-
-        setData(token, "toDisplay.uberEats.data", res["uber_eats"])
-        setData(token, "toDisplay.uberEats.meta.processing.google_mail", False)
-
+        for service, redis_field, output in extract_services(df_received):
+            setData(token, "{}.data".format(redis_field), output)
+            setData(token, "{}.meta.processing.google_mail".format(
+                redis_field), False)
+            print("done processing {},  storing at {}".format(service, redis_field))
 
         df_sent = pd.DataFrame(getData(token, "raw.google.mail.sent"))
 
@@ -41,8 +27,7 @@ def google_mail_service(token):
         setData(token, "toDisplay.words.data", word_list)
         setData(token, "toDisplay.words.meta.processing.google_mail", False)
 
-        print(res)
-        print(word_list)
-
     except Exception as err:
         print(err)
+
+        # faire décorateur pour chaque sous-service pour l'output

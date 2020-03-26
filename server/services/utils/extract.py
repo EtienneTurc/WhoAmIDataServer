@@ -320,21 +320,6 @@ def uber_eats(df):
 
     return res
 
-# Call each function referenced in the services.txt file
-
-
-def extract_services(df):
-    res = {}
-    for s in services:
-        s = s.strip()
-        res[s] = globals()[s](df)
-    return res
-
-
-"""
-		Utils compiles utility scripts for the analysis of the emails
-"""
-
 
 def tag_mail(header):
     """
@@ -401,3 +386,33 @@ def clean_and_tokenize(text):
 
     tokens = text.split()
     return tokens
+
+
+# Call each function referenced in the services.txt file
+
+
+# def extract_services(df):
+#     res = {}
+#     for s in services:
+#         s = s.strip()
+#         res[s] = globals()[s](df)
+#     return res
+
+
+service_to_redis_mapping = {
+    "lydia": "toDisplay.lydia",
+    "doctolib": "toDisplay.doctolib",
+    "amazon": "toDisplay.amazon",
+    "uber_rides": "toDisplay.uberRides",
+    "uber_jump": "toDisplay.uberBikes",
+    "uber_eats": "toDisplay.uberEats"
+}
+
+
+def extract_services(df):
+    res = {}
+    for service in services:
+        service = service.strip()
+        redis_field = service_to_redis_mapping[service]
+        yield service, redis_field, globals()[service](df)
+    return
