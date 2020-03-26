@@ -2,7 +2,6 @@ import json
 import os
 
 import redis
-import chardet
 
 redis_client = redis.Redis(os.getenv("REDIS_HOST", "127.0.0.1"),
                            os.getenv("REDIS_PORT", 6379), decode_responses=True)
@@ -24,6 +23,7 @@ def hook(x):
         else:
             dic[key] = x[key]
     return dic
+
 
 def getData(token, path):
     res = redis_client.execute_command(
