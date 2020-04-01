@@ -1,4 +1,4 @@
-from utils import clean_and_tokenize
+from services.utils.extract import clean_and_tokenize
 
 
 categories = ['sport', 'education', 'alimentation']
@@ -6,22 +6,22 @@ vocab = []
 vocab_concept = []
 
 for cat in categories:
-    with open('vocabulary/'+cat+'_all.txt', 'r') as f:
-        v = f.read().split('\n')
-        while("" in v):
-            v.remove("")
-        vocab += v
-    with open('vocabulary/'+cat+'_concept.txt', 'r') as f:
-        v = f.read().split('\n')
-        while("" in v):
-            v.remove("")
-        vocab += v
-        vocab_concept.append(v)
+    with open('services/vocabulary/'+cat+'_all.txt', 'r') as f:
+        words = f.read().split('\n')
+        while("" in words):
+            words.remove("")
+        vocab += words
+    with open('services/vocabulary/'+cat+'_concept.txt', 'r') as f:
+        concept = f.read().split('\n')
+        while("" in concept):
+            concept.remove("")
+        vocab += concept
+        vocab_concept.append(concept)
 
 
-def lookup(list):
+def lookup(word_list):
     count = 0
-    for x in list:
+    for x in word_list:
         if x in vocab:
             count += 1
     return count

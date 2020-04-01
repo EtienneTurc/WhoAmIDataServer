@@ -1,9 +1,10 @@
+from unidecode import unidecode
 from datetime import datetime
 import locale
 import re
 import pandas as pd
 
-services = open("services.txt", "r").read().split("\n")
+services = open("services/services.txt", "r").read().split("\n")
 services = [s.strip() for s in services if s]
 
 
@@ -44,46 +45,47 @@ except:
 
 
 def doctolib(df):
-    # function to apply to retrieve date
-    def get_date(x):
-        tmp = x['snippet']
-        tmp = tmp.split(x['appointment'])[1]
-        tmp = tmp.split(' DÉPLACER')[0]
-        try:
-            date = datetime.strptime(tmp, '%A %d %B à %Hh%M')
-            date = date.replace(year=x['date'].year)
-        except:
-            date = None
-        return date
-
-    # restriction to doctolib mails
     mails_doc = df.loc[df.cat == 'doctolib']
-    # restriction to confirmed appointments
+
     mails_doc = mails_doc.loc[mails_doc.snippet.str.contains("confirmé")]
 
-    if mails_doc.shape[0] == 0:
-        return {'date': [],
-                'appointment': []
-                }
+    res = []
 
-    # Regex to match weekdays
-    reg_weekdays = re.compile(
-        r' Lundi|Mardi|Mercredi|Jeudi|Vendredi|Samedi|Dimanche')
+    for date_mail, el in mails_doc.loc[:, ['date', 'body']].itertuples(index=False):
+        date = datetime.fromtimestamp(int(date_mail)/1000)
+        tmp = {}
 
-    # Extracting name of doctor + sector by splitting on confirmé and weekdays regex
-    mails_doc['appointment'] = mails_doc.snippet.apply(
-        lambda x: reg_weekdays.split(x.split('confirmé ')[1])[0])
+        try:
+            name = re.findall(r'RDV confirmé \n \n(.*?) \n', el)[0]
+        except:
+            name = None
+        tmp['name'] = name
 
-    # Retriving appointment date, the year is the one of the email notification
-    mails_doc['cons_date'] = mails_doc[['snippet',
-                                        'date', 'appointment']].apply(get_date, axis=1)
+        try:
+            spe = re.findall(name + ' \n(.*?) \n', el)[0]
+        except:
+            spe = None
+        tmp['spe'] = spe
 
-    # we discard wrong matchings
-    mails_doc = mails_doc.loc[mails_doc['cons_date'].isna() == False]
+        try:
+            date = re.findall(spe + ' \n(.*?) \n', el)[0]
+            date = datetime.strptime(date, '%A %d %B a %Hh%M')
+            date = date.replace(year=date_mail.year)
+            tmp['date'] = str(int(date.timestamp()*1000))
+        except:
+            date = None
+            tmp['date'] = None
 
-    return {'date': list(mails_doc['cons_date'].values),
-            'appointment': list(mails_doc['appointment'].values)
-            }
+        try:
+            address = re.findall(
+                r"Accès & informations \n \n(.*?) \n \nOBTENIR L'ITINERAIRE", el, re.DOTALL)[0]
+            address = ''.join(address.split('\n'))
+        except:
+            address = None
+        tmp['address'] = address
+
+        res += [tmp]
+    return res
 
 
 def amazon(df):
@@ -147,17 +149,19 @@ def amazon(df):
         res += [tmp]
     return res
 
+
 def uber_rides(df):
-    df_uber = df.loc[df.cat=='uber']
+    df_uber = df.loc[df.cat == 'uber']
 
     res = []
 
-    for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False):
+    for date, el in df_uber.loc[:, ['date', 'body']].itertuples(index=False):
         date = datetime.fromtimestamp(int(date)/1000)
         tmp = {}
         # place
         try:
-            departure, destination = re.findall(r'\d{1,2}:\d{1,2} (.*?) \d{1,2}:\d{1,2} (.*?) Invitez', el)[0]
+            departure, destination = re.findall(
+                r'\d{1,2}:\d{1,2} (.*?) \d{1,2}:\d{1,2} (.*?) Invitez', el)[0]
             tmp['departure'] = departure
             tmp['destination'] = destination
         except:
@@ -165,7 +169,7 @@ def uber_rides(df):
 
         # price
         try:
-            price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ',el )[0]
+            price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ', el)[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
             tmp['price'] = price
         except:
@@ -187,8 +191,9 @@ def uber_rides(df):
             horaire = re.findall(r'\d{1,2}:\d\d', el)
             start = datetime.strptime(horaire[0], '%H:%M')
             end = datetime.strptime(horaire[1], '%H:%M')
-            start = start.replace(year = date.year, month = date.month, day = date.day)
-            end = end.replace(year = date.year, month = date.month, day = date.day)
+            start = start.replace(
+                year=date.year, month=date.month, day=date.day)
+            end = end.replace(year=date.year, month=date.month, day=date.day)
             tmp['start'] = str(int(start.timestamp()*1000))
             tmp['end'] = str(int(end.timestamp()*1000))
         except:
@@ -202,19 +207,21 @@ def uber_rides(df):
 
     return res
 
-def uber_bicycle(df):
-    df_uber = df.loc[df.cat=='uber']
 
-    # df_uber = df_uber.loc[df_uber.body.str.contains("vélos électriques")]
+def uber_jump(df):
+    df_uber = df.loc[df.cat == 'uber']
+
+    df_uber = df_uber.loc[df_uber.body.str.contains("vélos électriques")]
 
     res = []
 
-    for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False):
+    for date, el in df_uber.loc[:, ['date', 'body']].itertuples(index=False):
         date = datetime.fromtimestamp(int(date)/1000)
         tmp = {}
         # place
         try:
-            departure, destination = re.findall(r'\d{1,2}:\d\d (.*?) \d{1,2}:\d\d (.*?) contacter', el)[0]
+            departure, destination = re.findall(
+                r'\d{1,2}:\d\d (.*?) \d{1,2}:\d\d (.*?) contacter l\'assistance', el)[0]
             tmp['departure'] = departure
             tmp['destination'] = destination
         except:
@@ -222,7 +229,7 @@ def uber_bicycle(df):
 
         # price
         try:
-            price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ',el )[0]
+            price = re.findall(r' Total: \d{1,1000},\d{2,1000} € ', el)[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
             tmp['price'] = price
         except:
@@ -232,7 +239,8 @@ def uber_bicycle(df):
 
         # distance
         try:
-            distance = re.findall(r'\d{1,1000}.{0,1}\d{0,1000} kilomètres', el)[0]
+            distance = re.findall(
+                r'\d{1,1000}.{0,1}\d{0,1000} kilomètres', el)[0]
             tmp['distance'] = distance
         except:
             distance = None
@@ -244,10 +252,11 @@ def uber_bicycle(df):
             horaire = re.findall(r'\d{1,2}:\d\d', el)
             start = datetime.strptime(horaire[0], '%H:%M')
             end = datetime.strptime(horaire[1], '%H:%M')
-            start = start.replace(year = date.year, month = date.month, day = date.day)
-            end = end.replace(year = date.year, month = date.month, day = date.day)
-            tmp['start'] = str(int(start.timestamp() *1000))
-            tmp['end'] = str(int(end.timestamp() *1000))
+            start = start.replace(
+                year=date.year, month=date.month, day=date.day)
+            end = end.replace(year=date.year, month=date.month, day=date.day)
+            tmp['start'] = str(int(start.timestamp() * 1000))
+            tmp['end'] = str(int(end.timestamp() * 1000))
         except:
             start = None
             end = None
@@ -259,26 +268,27 @@ def uber_bicycle(df):
 
     return res
 
+
 def uber_eats(df):
-    df_uber = df.loc[:1,:]
+    df_uber = df.loc[:1, :]
 
     res = []
-    for date, el in df_uber.loc[:,['date', 'body']].itertuples(index=False): 
+    for date, el in df_uber.loc[:, ['date', 'body']].itertuples(index=False):
         tmp = {}
-        
-        # price   
+
+        # price
         try:
-            price = re.findall(r'Total: \d{1,1000},\d{2,1000} € ',el )[0]
+            price = re.findall(r'Total: \d{1,1000},\d{2,1000} € ', el)[0]
             price = re.findall(r'\d{1,1000},\d{2,1000}', price)[0]
             tmp['price'] = price
         except:
             price = None
             tmp['price'] = price
             pass
-        
+
         # restaurant
         try:
-            restaurant = re.findall(r'commandé chez (.*?)\.',el )[0]
+            restaurant = re.findall(r'commandé chez (.*?)\.', el)[0]
             tmp['restaurant'] = restaurant
         except:
             tmp['restaurant'] = None
@@ -287,32 +297,121 @@ def uber_eats(df):
         # articles
         try:
             cmd = re.findall(r'Total (.*?) Montant facturé ', el, re.DOTALL)[0]
-            articles = re.findall(r'\d{1,3} \n(.*?) \n\d{1,1000},\d\d €',cmd, re.DOTALL)[:-1]
+            articles = re.findall(
+                r'\d{1,3} \n(.*?) \n\d{1,1000},\d\d €', cmd, re.DOTALL)[:-1]
             tmp['articles'] = articles
         except:
             tmp['articles'] = None
             pass
-        
+
         # date
         try:
-            date = re.findall(r'Total: \d{1,1000},\d{2,1000} € \n(.*?) \n', el)[0]
+            date = re.findall(
+                r'Total: \d{1,1000},\d{2,1000} € \n(.*?) \n', el)[0]
             date = datetime.strptime(date, '%a, %b %d, %Y')
             date = str(date.timestamp()*1000)
             tmp['date'] = date
         except:
             tmp['date'] = None
             pass
-        
+
         res += [tmp]
 
     return res
 
+
+def tag_mail(header):
+    """
+    tag_mail will tag if the mail is in the list of structured emails
+
+    input:
+    header : is the header of the email
+    output:
+    name of the category, or 'no_cat' if non were find
+
+    usage example: df['cat'] = df.headers.apply(tag_mail)
+    """
+    comp_list = ['linkedin', 'facebook', 'lydia', 'spotify', 'sncf', 'twitter', 'tinder', 'deezer', 'itunes',
+                             'apple', 'google', 'uber', 'ubereats', 'doctolib', 'instagram', 'amazon']
+
+    if header == []:
+        return None
+    for k in header:
+        if k['name'] == 'From':
+            L_cat = [el * (el in k['value']) for el in comp_list]
+            L_cat = list(filter(lambda x: x != '', L_cat))
+            if L_cat == []:
+                return None
+            elif len(L_cat) > 2:
+                print(L_cat)
+                return L[cat[0]]
+            elif len(L_cat) == 1:
+                return L_cat[0]
+            else:
+                return None
+
+
+def format_mail(text):
+    text = text.lower()
+    text = unidecode(text)
+    return text
+
+
+def clean_and_tokenize(text):
+    """
+    Cleaning a document with:
+        - Lowercase
+        - Removing numbers with regular expressions
+        - Removing punctuation with regular expressions
+        - Removing other artifacts
+    And separate the document into words by simply splitting at spaces
+    Params:
+        text (string): a sentence or a document
+    Returns:
+        tokens (list of strings): the list of tokens (word units) forming the document
+    """
+    # Lowercase
+    text = text.lower()
+    # Remove numbers
+    text = re.sub(r"[0-9]+", "", text)
+    # Remove punctuation
+    REMOVE_PUNCT = re.compile("[.;:!\'?,\"()\[\]]")
+    text = REMOVE_PUNCT.sub("", text)
+    # Remove small words (1 and 2 characters)
+    text = re.sub(r"\b\w{1,2}\b", "", text)
+    # Remove HTML artifacts specific to the corpus we're going to work with
+    REPLACE_HTML = re.compile("(<br\s*/><br\s*/>)|(\-)|(\/)")
+    text = REPLACE_HTML.sub(" ", text)
+
+    tokens = text.split()
+    return tokens
+
+
 # Call each function referenced in the services.txt file
 
 
-def extractServiceInfo(df):
+# def extract_services(df):
+#     res = {}
+#     for s in services:
+#         s = s.strip()
+#         res[s] = globals()[s](df)
+#     return res
+
+
+service_to_redis_mapping = {
+    "lydia": "toDisplay.lydia",
+    "doctolib": "toDisplay.doctolib",
+    "amazon": "toDisplay.amazon",
+    "uber_rides": "toDisplay.uberRides",
+    "uber_jump": "toDisplay.uberBikes",
+    "uber_eats": "toDisplay.uberEats"
+}
+
+
+def extract_services(df):
     res = {}
-    for s in services:
-        s = s.strip()
-        res[s] = globals()[s](df)
-    return res
+    for service in services:
+        service = service.strip()
+        redis_field = service_to_redis_mapping[service]
+        yield service, redis_field, globals()[service](df)
+    return

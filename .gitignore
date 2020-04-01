@@ -3,4 +3,5 @@ __pycache__
 data
 .vscode
 server/env
-env/
+server/dump.rdb
+env
