@@ -1,0 +1,6 @@
+lydia
+doctolib
+amazon
+uber_rides
+uber_jump
+uber_eats
